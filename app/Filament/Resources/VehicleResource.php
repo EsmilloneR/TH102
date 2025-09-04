@@ -40,7 +40,7 @@ class VehicleResource extends Resource
                         TextInput::make('make')->required()->maxLength(100),
                         TextInput::make('model')->required()->maxLength(100),
                         TextInput::make('year')->numeric()->minValue(1900)->maxValue(date('Y') + 1),
-                        TextInput::make('licensed_number')->required()->unique(ignoreRecord: true),
+                        TextInput::make('licensed_number')->required()->unique(ignoreRecord: true)->label('License Plate Number'),
                         TextInput::make('color')->maxLength(50),
                         Forms\Components\Select::make('transmission')
                             ->options([

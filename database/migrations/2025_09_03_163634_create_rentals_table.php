@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->string('pickup_location')->nullable();
             $table->string('dropoff_location')->nullable();
-            $table->enum('trip_type', ['self_drive', 'with_driver']); // ['pickup_drop', 'hours', 'round_trip', '24h', 'days', 'weeks']
+            $table->enum('trip_type', ['pickup_dropoff', 'hrs', 'roundtrip', '24hrs', 'days', 'week', 'month']); // ['pickup_drop', 'hours', 'round_trip', '24h', 'days', 'weeks']
 
             $table->unsignedTinyInteger('fuel_level_out')->nullable();
             $table->unsignedTinyInteger('fuel_level_in')->nullable();

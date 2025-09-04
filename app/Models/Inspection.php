@@ -25,5 +25,5 @@ class Inspection extends Model
         return $this->belongsTo(Rental::class);
     }
 
-    
+
 }

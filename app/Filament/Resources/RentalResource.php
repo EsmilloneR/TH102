@@ -43,7 +43,7 @@ class RentalResource extends Resource
                     TextInput::make('pickup_location')->maxLength(150)->required(),
                     TextInput::make('dropoff_location')->maxLength(150)->required(),
 
-                    Select::make('trip_type')->options(['self_drive' => 'Self Drive', 'with_driver' => 'With Driver'])->required(),
+                    Select::make('trip_type')->options(['pickup_dropoff' => 'Pick Up & Drop Off Only', 'hrs' => 'Hour/s', 'roundtrip' => 'Round Trip Only (10hrs max)', '24hrs' => '24 Hours', 'days' => 'Days', 'week' => 'Week/weeks', 'month' => 'Month/months'])->required(),
                     TextInput::make('agreement_no')->unique(ignoreRecord: true)->required(),
                 ])->columns(2),
 
@@ -103,6 +103,16 @@ class RentalResource extends Resource
             ]);
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::getModel()::count() > 10 ? 'success' : 'danger';
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -118,4 +128,6 @@ class RentalResource extends Resource
             'edit' => Pages\EditRental::route('/{record}/edit'),
         ];
     }
+
+
 }
