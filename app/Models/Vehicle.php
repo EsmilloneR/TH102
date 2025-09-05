@@ -14,12 +14,19 @@ class Vehicle extends Model
         'color',
         'transmission',
         'seats',
+        'description',
+        'photo',
+        'images',
         'rate_hour',
         'rate_day',
         'rate_week',
         'active'
     ];
 
+    public function getCarNameAttribute()
+    {
+        return "{$this->make} {$this->model}";
+    }
     public function rentals(){
         return $this->hasMany(Rental::class);
     }
@@ -33,4 +40,8 @@ class Vehicle extends Model
             });
         });
     }
+
+        protected $casts = [
+        'images' => 'array'
+    ];
 }

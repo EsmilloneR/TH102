@@ -13,9 +13,13 @@
 
 <body>
     @livewire('partial.header')
+
     {{ $slot }}
     @livewireScripts
+    <script src="https://unpkg.com/alpinejs@3.15.0/dist/cdn.min.js" defer></script>
+
     @livewire('partial.footer')
+
 </body>
 
 </html>

@@ -65,9 +65,9 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isUser(): bool
+    public function isCarRental(): bool
     {
-        return $this->role === 'user';
+        return $this->role === 'rental';
     }
 
 }

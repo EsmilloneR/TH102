@@ -6,6 +6,9 @@ use App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource\RelationManagers;
 use App\Models\Vehicle;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -17,6 +20,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
@@ -37,8 +41,15 @@ class VehicleResource extends Resource
             ->schema([
                 Section::make('Vehicle Details')
                     ->schema([
-                        TextInput::make('make')->required()->maxLength(100),
-                        TextInput::make('model')->required()->maxLength(100),
+
+                        FileUpload::make('photo')->directory('vehicles')->label('Avatar'),
+
+                        Grid::make()->schema([
+                            TextInput::make('make')->required()->maxLength(100),
+                            TextInput::make('model')->required()->maxLength(100),
+                        ]),
+
+
                         TextInput::make('year')->numeric()->minValue(1900)->maxValue(date('Y') + 1),
                         TextInput::make('licensed_number')->required()->unique(ignoreRecord: true)->label('License Plate Number'),
                         TextInput::make('color')->maxLength(50),
@@ -49,14 +60,23 @@ class VehicleResource extends Resource
                             ])
                             ->required(),
                         TextInput::make('seats')->numeric()->minValue(2)->maxValue(20),
+
+                        Section::make('Rates')
+                            ->schema([
+                            TextInput::make('rate_hour')->numeric()->prefix('₱'),
+                            TextInput::make('rate_day')->numeric()->prefix('₱'),
+                            TextInput::make('rate_week')->numeric()->prefix('₱'),
+                        ])->columns(3),
+
+                        MarkdownEditor::make('description')->columnSpanFull()->fileAttachmentsDirectory('vehicles'),
+
                     ])->columns(2),
 
-                Section::make('Rates')
-                    ->schema([
-                       TextInput::make('rate_hour')->numeric()->prefix('₱'),
-                       TextInput::make('rate_day')->numeric()->prefix('₱'),
-                       TextInput::make('rate_week')->numeric()->prefix('₱'),
-                    ])->columns(3),
+
+                Section::make('Images')->schema([
+                    FileUpload::make('images')->multiple()->directory('vehicles')->reorderable(),
+                ]),
+
 
                 Toggle::make('active')->label('Available for rental')->default(true),
             ]);
@@ -66,10 +86,11 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('photo')->circular()->width(40)->height(40),
                 TextColumn::make('make')->sortable()->searchable(),
                 TextColumn::make('model')->sortable()->searchable(),
                 TextColumn::make('year')->sortable(),
-                TextColumn::make('licensed_number')->sortable()->searchable(),
+                TextColumn::make('licensed_number')->sortable()->searchable()->label('Plate No.'),
                 TextColumn::make('color'),
                 TextColumn::make('transmission'),
                 TextColumn::make('seats'),

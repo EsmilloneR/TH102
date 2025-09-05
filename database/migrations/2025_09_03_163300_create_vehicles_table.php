@@ -23,6 +23,9 @@ return new class extends Migration
             $table->decimal('rate_hour', 10,2)->nullable();
             $table->decimal('rate_day', 10,2)->nullable();
             $table->decimal('rate_week', 10,2)->nullable();
+            $table->longText('description')->nullable();
+            $table->string('photo')->nullable();
+            $table->json('images')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

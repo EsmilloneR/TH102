@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('inspections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rental_id')->constrained();
-            $table->enum('type', ['out', 'in']);
-            $table->unsignedTinyInteger('fuel_level');
-            $table->integer('odameter');
+            $table->enum('type', ['out', 'in'])->nullable();
+            $table->unsignedTinyInteger('fuel_level')->nullable();
+            $table->integer('odometer')->nullable();
             $table->text('condition_notes')->nullable();
             $table->json('photos')->nullable();
             $table->timestamps();

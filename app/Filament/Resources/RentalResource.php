@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Filament\Resources;
-
+// use App\Filament\Tables\Actions\ExportAction;
+use App\Filament\Exports\RentalExporter;
+use App\Filament\Resources\InspectionResource\RelationManagers\InspectionsRelationManager;
 use App\Filament\Resources\RentalResource\Pages;
-use App\Filament\Resources\RentalResource\RelationManagers;
 use App\Models\Rental;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -15,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -33,9 +36,14 @@ class RentalResource extends Resource
         return $form
             ->schema([
                 Section::make('Rental Information')->schema([
+
                     Select::make('customer_id')->relationship('customer', 'first_name')->required(),
 
-                    Select::make('vehicle_id')->relationship('vehicle', 'licensed_number')->required(),
+                    Select::make('vehicle_id')
+                    ->relationship('vehicle', fn ($query) => $query->select('id', 'make', 'model'))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->make} {$record->model}")
+                    ->required(),
+
 
                     DateTimePicker::make('rental_start')->label('Start Date/Time')->required(),
                     DateTimePicker::make('rental_end')->label('Start Date/Time')->required(),
@@ -73,7 +81,13 @@ class RentalResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->headerActions([
+    Tables\Actions\ExportAction::make()
+        ->exporter(RentalExporter::class),
+])
             ->columns([
+                // Tables\Actions\ExportAction::make()->exporter(RentalExporter::class),
+
                 TextColumn::make('agreement_no')->sortable()->searchable(),
                 TextColumn::make('customer.name')->label('Customer')->sortable()->searchable(),
                 TextColumn::make('vehicle.licensed_number')->label('Vehicle'),
@@ -100,7 +114,10 @@ class RentalResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+
+                // ExportBulkAction::make()->exporter(RentalExporter::class)
             ]);
+
     }
 
     public static function getNavigationBadge(): ?string
@@ -116,7 +133,7 @@ class RentalResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            InspectionsRelationManager::class,
         ];
     }
 
