@@ -25,13 +25,13 @@ class PaymentResource extends Resource
     protected static ?string $model = Payment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
-    protected static ?string $navigationGroup = 'Rentals Management';
+    protected static ?string $navigationGroup = 'Rental Management';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Select::make('rental_id')->relationship('rental', 'agreement_no')->required()->label('Rental Agreement'),
+                Select::make('rental_id')->relationship('rental', 'agreement_no')->required()->label('Rental Agreement')->required()->searchable()->preload(),
 
                 Select::make('payment_method')
                     ->options([
@@ -54,43 +54,68 @@ class PaymentResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                TextColumn::make('rental.agreement_no')->label('Agreement No.')->sortable()->searchable(),
+   public static function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            TextColumn::make('rental.agreement_no')
+                ->label('Agreement No.')
+                ->sortable()
+                ->searchable(),
 
-                TextColumn::make('rental.customer.first_name')->label('Customer')->sortable()->searchable(),
+            TextColumn::make('rental.user.name')
+                ->label('Name')
+                ->sortable()
+                ->searchable(),
 
-                TextColumn::make('payment_method')->badge()->sortable(),
+            TextColumn::make('payment_method')->badge()->sortable(),
 
-                TextColumn::make('amount')->money('PHP', true)->sortable()->label('Amount'),
+            TextColumn::make('amount')
+                ->money('PHP', true)
+                ->sortable()
+                ->label('Amount'),
 
-                TextColumn::make('transaction_reference')->label('Reference No.')->sortable()->searchable(),
+            TextColumn::make('transaction_reference')
+                ->label('Reference No.')
+                ->sortable()
+                ->searchable(),
 
-                BadgeColumn::make('status')->colors([
+            BadgeColumn::make('status')
+                ->colors([
                     'warning' => 'pending',
                     'success' => 'completed',
                     'danger' => 'failed',
-                ])->sortable(),
-
-                TextColumn::make('created_at')->dateTime('M d, Y h:i A')->label('Paid At')->sortable(),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                ActionGroup::make([
-                    EditAction::make(),
-                    DeleteAction::make()
                 ])
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
+                ->sortable()
+                ->searchable(),
+
+            TextColumn::make('created_at')
+                ->dateTime('M d, Y h:i A')
+                ->label('Paid At')
+                ->sortable(),
+        ])
+        ->filters([
+            //
+        ])
+        ->actions([
+            ActionGroup::make([
+                Tables\Actions\Action::make('receipt')
+                    ->label('Download Receipt')
+                    ->url(fn ($record) => route('payments.receipt', $record->id))
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-o-document-arrow-down'),
+
+                EditAction::make(),
+                DeleteAction::make(),
+            ]),
+        ])
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]),
+        ]);
+}
+
 
     public static function getRelations(): array
     {

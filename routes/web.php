@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvoiceController;
 use App\Livewire\Auth\LoginPage;
 use App\Livewire\Auth\RegisterPage;
 use App\Livewire\BrowseCars;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', Homepage::class);
 Route::get('/browse-cars', BrowseCars::class);
 Route::get('/vehicle/{id}', VehicleDetail::class);
+Route::get('/payments/{id}/receipt', [InvoiceController::class, 'receipt'])
+    ->name('payments.receipt');
 
 
 Route::middleware('guest')->group(function(){

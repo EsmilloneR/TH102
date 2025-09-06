@@ -10,6 +10,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -52,20 +53,20 @@ class VehicleResource extends Resource
 
                         TextInput::make('year')->numeric()->minValue(1900)->maxValue(date('Y') + 1),
                         TextInput::make('licensed_number')->required()->unique(ignoreRecord: true)->label('License Plate Number'),
-                        TextInput::make('color')->maxLength(50),
-                        Forms\Components\Select::make('transmission')
+                        TextInput::make('color')->maxLength(50)->required(),
+                        Select::make('transmission')
                             ->options([
                                 'automatic' => 'Automatic',
                                 'manual' => 'Manual',
                             ])
                             ->required(),
-                        TextInput::make('seats')->numeric()->minValue(2)->maxValue(20),
+                        TextInput::make('seats')->required()->numeric()->minValue(2)->maxValue(20),
 
                         Section::make('Rates')
                             ->schema([
-                            TextInput::make('rate_hour')->numeric()->prefix('₱'),
-                            TextInput::make('rate_day')->numeric()->prefix('₱'),
-                            TextInput::make('rate_week')->numeric()->prefix('₱'),
+                            TextInput::make('rate_hour')->numeric()->prefix('₱')->required(),
+                            TextInput::make('rate_day')->numeric()->prefix('₱')->required(),
+                            TextInput::make('rate_week')->numeric()->prefix('₱')->required(),
                         ])->columns(3),
 
                         MarkdownEditor::make('description')->columnSpanFull()->fileAttachmentsDirectory('vehicles'),
@@ -74,7 +75,7 @@ class VehicleResource extends Resource
 
 
                 Section::make('Images')->schema([
-                    FileUpload::make('images')->multiple()->directory('vehicles')->reorderable(),
+                    FileUpload::make('images')->multiple()->directory('vehicles')->reorderable()->appendFiles(),
                 ]),
 
 

@@ -8,7 +8,7 @@
         <div class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6">
 
             <!-- RENT FORM -->
-            <div class="bg-white text-black rounded-2xl shadow-lg p-6 flex flex-col  items-center gap-6">
+            {{-- <div class="bg-white text-black rounded-2xl shadow-lg p-6 flex flex-col  items-center gap-6">
                 <div>
                     <h2 class="text-3xl font-bold">RENT <span class="text-red-600">Cars</span></h2>
                 </div>
@@ -32,7 +32,7 @@
                         </svg>
                     </button>
                 </form>
-            </div>
+            </div> --}}
         </div>
     </section>
 

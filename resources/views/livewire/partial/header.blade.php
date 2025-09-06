@@ -5,7 +5,7 @@
             <div class="flex items-center justify-between">
                 <a class="flex-none text-xl font-bold dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                     href="/" aria-label="/" wire:navigate> <span class="text-red-600 dark:text-red-600">Drive</span>
-                    & Go</a>
+                    <span class="text-gray-600 dark:text-gray-600">&</span> Go</a>
                 <div class="md:hidden">
                     <button type="button"
                         class="hs-collapse-toggle flex justify-center items-center w-9 h-9 text-sm font-bold rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"

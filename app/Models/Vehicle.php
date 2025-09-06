@@ -41,7 +41,7 @@ class Vehicle extends Model
         });
     }
 
-        protected $casts = [
-        'images' => 'array'
+    protected $casts = [
+    'images' => 'array'
     ];
 }

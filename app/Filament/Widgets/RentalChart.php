@@ -9,6 +9,7 @@ class RentalChart extends ChartWidget
 {
    protected static ?string $heading = 'Monthly Revenue';
     protected static ?int $sort = 2;
+    protected int | string | array $columnSpan = 'full';
 
     protected function getData(): array
     {

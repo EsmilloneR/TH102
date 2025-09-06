@@ -37,16 +37,16 @@ class RentalResource extends Resource
             ->schema([
                 Section::make('Rental Information')->schema([
 
-                    Select::make('customer_id')->relationship('customer', 'first_name')->required(),
+                    Select::make('user_id')->relationship('user', 'name', modifyQueryUsing: fn ($query) => $query->where('role', 'rental'))->required()->searchable()->preload(),
 
                     Select::make('vehicle_id')
                     ->relationship('vehicle', fn ($query) => $query->select('id', 'make', 'model'))
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->make} {$record->model}")
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->make} {$record->model} {$record->year}")
                     ->required(),
 
 
                     DateTimePicker::make('rental_start')->label('Start Date/Time')->required(),
-                    DateTimePicker::make('rental_end')->label('Start Date/Time')->required(),
+                    DateTimePicker::make('rental_end')->label('End Date/Time')->required(),
 
                     TextInput::make('pickup_location')->maxLength(150)->required(),
                     TextInput::make('dropoff_location')->maxLength(150)->required(),
@@ -89,7 +89,7 @@ class RentalResource extends Resource
                 // Tables\Actions\ExportAction::make()->exporter(RentalExporter::class),
 
                 TextColumn::make('agreement_no')->sortable()->searchable(),
-                TextColumn::make('customer.name')->label('Customer')->sortable()->searchable(),
+                TextColumn::make('user.name')->label('User')->sortable()->searchable(),
                 TextColumn::make('vehicle.licensed_number')->label('Vehicle'),
                 TextColumn::make('rental_start')->dateTime(),
                 TextColumn::make('rental_end')->dateTime(),

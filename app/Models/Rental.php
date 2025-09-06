@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Rental extends Model
 {
     protected $fillable = [
-        'customer_id',
+        'user_id',
         'vehicle_id',
         'rental_start',
         'rental_end',
@@ -24,12 +24,25 @@ class Rental extends Model
         'status',
         'agreement_no'
     ];
+
+    protected static function booted()
+    {
+        static::saving(function ($rental) {
+            $rental->total =
+                ($rental->base_amount ?? 0)
+                + ($rental->extra_charges ?? 0)
+                + ($rental->penalties ?? 0)
+                - ($rental->deposit ?? 0);
+        });
+    }
+
+
     protected $casts = [
         'start_at'=>'datetime',
         'end_at'=>'datetime'
     ];
-    public function customer(){
-        return $this->belongsTo(Customer::class);
+    public function user(){
+        return $this->belongsTo(User::class);
     }
     public function vehicle(){
          return $this->belongsTo(Vehicle::class);

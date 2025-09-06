@@ -12,22 +12,16 @@ class Customer extends Model
     'first_name',
     'last_name',
     'email',
-    'phone',
+    'phone_number',
     'address',
     'nationality',
     'id_type',
-    'id_number'
+    'id_number',
+    'id_pictures',
 ];
 
-    public function rentals(){
-         return $this->hasMany(Rental::class);
-    }
     public function getNameAttribute(){
         return $this->first_name.' '.$this->last_name;
     }
 
-        public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

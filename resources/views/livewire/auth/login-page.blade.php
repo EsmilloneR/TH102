@@ -7,7 +7,7 @@
                         <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Sign in</h1>
                         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
                             Don't have an account yet?
-                            <a class="text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                            <a class="text-red-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                                 href="/register-page" wire:navigate>
                                 Sign up here
                             </a>
@@ -24,7 +24,7 @@
                                 <label for="email" class="block text-sm mb-2 dark:text-white">Email address</label>
                                 <div class="relative">
                                     <input type="email" id="email" wire:model="email"
-                                        class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                                        class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-red-500 focus:ring-red-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                                         aria-describedby="email-error">
                                     @error('email')
                                         <div class=" absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3">
@@ -46,12 +46,12 @@
                             <div>
                                 <div class="flex justify-between items-center">
                                     <label for="password" class="block text-sm mb-2 dark:text-white">Password</label>
-                                    <a class="text-sm text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                    <a class="text-sm text-red-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                                         href="/forgot" wire:navigate>Forgot password?</a>
                                 </div>
                                 <div class="relative">
                                     <input type="password" id="password" wire:model="password"
-                                        class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                                        class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-red-500 focus:ring-red-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                                         aria-describedby="password-error">
                                     @error('password')
                                         <div class=" absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3">
@@ -70,7 +70,7 @@
                             </div>
                             <!-- End Form Group -->
                             <button type="submit"
-                                class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Sign
+                                class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">Sign
                                 in</button>
                         </div>
                     </form>

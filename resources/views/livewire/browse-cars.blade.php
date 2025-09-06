@@ -18,10 +18,10 @@
                                 {{ $car->year }}
                             </h3>
                         </div>
-                        <p class="text-md">
-                            Rate:
+                        <p class="text-md font-semibold">
+                            From:
                             <span class="text-green-600 dark:text-green-600">
-                                {{ Number::currency($car->rate_day, 'PHP') }}
+                                {{ Number::currency($car->rate_hour, 'PHP') }}
                             </span>
                             -
                             <span class="text-green-600 dark:text-green-600">

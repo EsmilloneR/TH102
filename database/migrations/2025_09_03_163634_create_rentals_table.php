@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('rentals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained();
-            $table->foreignId('vehicle_id')->constrained();
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('vehicle_id')->constrained('vehicles');
             $table->dateTime('rental_start');
             $table->dateTime('rental_end');
 
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->decimal('deposit', 10,2)->default(0);
             $table->decimal('extra_charges', 10,2)->default(0);
             $table->decimal('penalties',10,2)->default(0);
-
+            $table->decimal('total', 10,2)->default(0);
             $table->enum('status', ['reserved', 'ongoing', 'completed', 'cancelled'])->default('reserved');
             $table->string('agreement_no')->unique();
             $table->timestamps();

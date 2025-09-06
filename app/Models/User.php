@@ -22,6 +22,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'address',
+        'nationality',
+        'id_type',
+        'id_number',
+        'id_pictures',
+        'phone_number',
+        'role'
     ];
 
     /**
@@ -70,4 +77,11 @@ class User extends Authenticatable
         return $this->role === 'rental';
     }
 
+    protected $casts = [
+        'id_pictures' => 'array'
+    ];
+
+    public function rentals(){
+        return $this->hasMany(Rental::class);
+    }
 }
