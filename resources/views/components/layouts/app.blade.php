@@ -15,11 +15,11 @@
     @livewire('partial.header')
 
     {{ $slot }}
+
+    @if (!request()->routeIs('pickup-detail'))
+        @livewire('partial.footer')
+    @endif
     @livewireScripts
-    <script src="https://unpkg.com/alpinejs@3.15.0/dist/cdn.min.js" defer></script>
-
-    @livewire('partial.footer')
-
 </body>
 
 </html>

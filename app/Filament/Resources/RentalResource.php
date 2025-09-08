@@ -18,6 +18,8 @@ use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ExportBulkAction;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,12 +39,36 @@ class RentalResource extends Resource
             ->schema([
                 Section::make('Rental Information')->schema([
 
-                    Select::make('user_id')->relationship('user', 'name', modifyQueryUsing: fn ($query) => $query->where('role', 'rental'))->required()->searchable()->preload(),
+                    Select::make('user_id')->relationship('user', 'name', modifyQueryUsing: fn ($query) => $query->where('role', 'renter'))->required()->searchable()->preload(),
 
                     Select::make('vehicle_id')
-                    ->relationship('vehicle', fn ($query) => $query->select('id', 'make', 'model'))
+                    ->label('Vehicle')
+                    ->relationship(
+                        name: 'vehicle',
+                        titleAttribute: 'model',
+                        modifyQueryUsing: function ($query, callable $get) {
+                            $start = $get('rental_start');
+                            $end   = $get('rental_end');
+
+                            if ($start && $end) {
+                                $query->whereDoesntHave('rentals', function ($q) use ($start, $end) {
+                                    $q->whereIn('status', ['reserved', 'ongoing']) // only block active rentals
+                                    ->where(function ($q2) use ($start, $end) {
+                                        $q2->whereBetween('rental_start', [$start, $end])
+                                            ->orWhereBetween('rental_end', [$start, $end])
+                                            ->orWhere(function ($q3) use ($start, $end) {
+                                                $q3->where('rental_start', '<=', $start)
+                                                    ->where('rental_end', '>=', $end);
+                                            });
+                                    });
+                                });
+                            }
+                        }
+                    )
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->make} {$record->model} {$record->year}")
-                    ->required(),
+                    ->required()
+                    ->searchable()
+                    ->preload(),
 
 
                     DateTimePicker::make('rental_start')->label('Start Date/Time')->required(),
@@ -52,7 +78,13 @@ class RentalResource extends Resource
                     TextInput::make('dropoff_location')->maxLength(150)->required(),
 
                     Select::make('trip_type')->options(['pickup_dropoff' => 'Pick Up & Drop Off Only', 'hrs' => 'Hour/s', 'roundtrip' => 'Round Trip Only (10hrs max)', '24hrs' => '24 Hours', 'days' => 'Days', 'week' => 'Week/weeks', 'month' => 'Month/months'])->required(),
-                    TextInput::make('agreement_no')->unique(ignoreRecord: true)->required(),
+                    TextInput::make('agreement_no')
+                    ->disabled()
+                    ->default(function () {
+                        $date = now()->format('Ymd');
+                        $count = Rental::whereDate('created_at', now())->count() + 1;
+                        return 'AGR-' . $date . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
+                    }),
                 ])->columns(2),
 
 
@@ -81,26 +113,32 @@ class RentalResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        ->headerActions([
-    Tables\Actions\ExportAction::make()
-        ->exporter(RentalExporter::class),
-])
             ->columns([
-                // Tables\Actions\ExportAction::make()->exporter(RentalExporter::class),
-
-                TextColumn::make('agreement_no')->sortable()->searchable(),
-                TextColumn::make('user.name')->label('User')->sortable()->searchable(),
-                TextColumn::make('vehicle.licensed_number')->label('Vehicle'),
-                TextColumn::make('rental_start')->dateTime(),
-                TextColumn::make('rental_end')->dateTime(),
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'warning' => 'reserved',
-                        'info' => 'ongoing',
-                        'success' => 'completed',
-                        'danger' => 'cancelled',
+                Split::make([
+                    Stack::make([
+                        TextColumn::make('user.name')->label('Renter')->searchable()->sortable(),
+                        TextColumn::make('agreement_no')->weight('bold')->searchable()->sortable(),
                     ]),
-                TextColumn::make('total')->money('php'),
+                    Stack::make([
+                        TextColumn::make('vehicle.make')
+                            ->label('Vehicle')
+                            ->getStateUsing(fn ($record) => "{$record->vehicle->make} {$record->vehicle->model}")
+                            ->searchable()
+                            ->sortable(),
+                        TextColumn::make('vehicle.licensed_number')->label('Licensed Number')->searchable()->sortable(),
+                    ]),
+                    Stack::make([
+                        TextColumn::make('status')
+                            ->formatStateUsing(fn ($state) => ucwords(str_replace('_', ' ', $state)))
+                            ->searchable()
+                            ->sortable(),
+                        TextColumn::make('total')->money('php'),
+                    ]),
+                    Stack::make([
+                        TextColumn::make('rental_start')->dateTime()->label('Start')->sortable(),
+                        TextColumn::make('rental_end')->dateTime()->label('End')->sortable(),
+                    ]),
+                ]),
             ])
             ->filters([
                 //
@@ -108,16 +146,13 @@ class RentalResource extends Resource
             ->actions([
                 ActionGroup::make([
                     EditAction::make(),
-                ])
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-
-                // ExportBulkAction::make()->exporter(RentalExporter::class)
             ]);
-
     }
 
     public static function getNavigationBadge(): ?string

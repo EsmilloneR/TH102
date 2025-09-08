@@ -44,20 +44,10 @@
                             Browse Cars
                         </a>
 
-                        <a class="font-bold {{ request()->is('services') ? 'text-red-600' : 'text-gray-500' }} hover:text-gray-400 py-3 md:py-6 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                            href="/services" wire:navigate>
-                            Services
-                        </a>
-                        {{-- <a
-                            class="font-bold {{ request()->is('products') ? 'text-red-600' : 'text-gray-500' }} hover:text-gray-400 py-3 md:py-6 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                            href="/products" wire:navigate>
-                            Contact
-                        </a> --}}
-
                         @guest
-                            <div class="pt-3 md:pt-0">
+                            {{-- <div class="pt-3 md:pt-0">
                                 <a class="py-2.5 px-4 inline-flex items-center gap-x-2 text-sm font-bold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                    href="/login-page" wire:navigate>
+                                    href="/login" wire:navigate>
                                     <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24"
                                         height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -66,37 +56,91 @@
                                     </svg>
                                     Log in
                                 </a>
-                            </div>
+                            </div> --}}
+
+                            @if (!request()->routeIs('login'))
+                                <div>
+                                    <button command="show-modal" commandfor="dialog"
+                                        class="py-2.5 px-4 inline-flex items-center gap-x-2 text-sm font-bold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                                        <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24"
+                                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                        </svg>Log
+                                        In</button>
+                                    <el-dialog>
+                                        <dialog id="dialog" aria-labelledby="dialog-title"
+                                            class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
+                                            <el-dialog-backdrop
+                                                class="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in">
+                                            </el-dialog-backdrop>
+
+                                            <div tabindex="0"
+                                                class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
+                                                <el-dialog-panel
+                                                    class="relative transform overflow-hidden  text-left    transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95">
+                                                    @livewire('auth.login')
+                                                </el-dialog-panel>
+                                            </div>
+                                        </dialog>
+                                    </el-dialog>
+                                @else
+                                    <div>
+                                        <button command="show-modal" commandfor="dialog"
+                                            class="py-2.5 px-4 inline-flex items-center gap-x-2 text-sm font-bold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                                            <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg"
+                                                width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                                <circle cx="12" cy="7" r="4" />
+                                            </svg>Register
+                                        </button>
+                                        <el-dialog>
+                                            <dialog id="dialog" aria-labelledby="dialog-title"
+                                                class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
+                                                <el-dialog-backdrop
+                                                    class="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in">
+                                                </el-dialog-backdrop>
+
+                                                <div tabindex="0"
+                                                    class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
+                                                    <el-dialog-panel
+                                                        class="relative transform overflow-hidden  text-left    transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95">
+                                                        @livewire('auth.register')
+                                                    </el-dialog-panel>
+                                                </div>
+                                            </dialog>
+                                        </el-dialog>
+                                    </div>
+                            @endif
                         @endguest
 
                         @auth
-                            <div
-                                class="hs-dropdown [--strategy:static] md:[--strategy:fixed] [--adaptive:none] md:[--trigger:hover] md:py-4">
-                                <button type="button"
+                            <div x-data="{ open: false }" @keydown.escape.window="open = false" class="relative">
+                                <button @click="open = !open"
                                     class="flex items-center w-full text-gray-500 hover:text-gray-400 font-bold dark:text-gray-400 dark:hover:text-gray-500">
-                                    {{ auth()->user()->name }}
-                                    <svg class="ms-2 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24"
-                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    {{ Auth::user()->name }}
+                                    <svg :class="open ? 'rotate-180' : ''" class="w-4 h-4 transition-transform"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <path d="m6 9 6 6 6-6" />
                                     </svg>
                                 </button>
 
-                                <div
-                                    class="hs-dropdown-menu transition-[opacity,margin] duration-[0.1ms] md:duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 md:w-48 hidden z-10 bg-white md:shadow-md rounded-lg p-2 dark:bg-gray-800 md:dark:border dark:border-gray-700 dark:divide-gray-700 before:absolute top-full md:border before:-top-5 before:start-0 before:w-full before:h-5">
-                                    <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-red-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                        href="#">
-                                        My Orders
-                                    </a>
-
-                                    <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-red-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                        href="#">
-                                        My Account
-                                    </a>
-                                    <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-red-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                        href="/logout">
-                                        Logout
-                                    </a>
+                                <div x-show="open" x-cloak x-transition @click.outside="open = false"
+                                    class="fixed right-4 md:right-8 top-17 md:top-17 w-40 bg-white shadow-lg rounded-b-md  p-2 z-50 dark:bg-neutral-800">
+                                    @if (Auth::user()->role === 'admin')
+                                        <a class="block px-3 py-2 rounded-lg text-sm font-bold text-gray-500 hover:bg-red-100"
+                                            href="/admin" wire:navigate>Admin Panel</a>
+                                    @else
+                                        <a class="block px-3 py-2 rounded-lg text-sm font-bold text-gray-500 hover:bg-red-100"
+                                            href="/checkout">Checkout</a>
+                                        <a class="block px-3 py-2 rounded-lg text-sm font-bold text-gray-500 hover:bg-red-100"
+                                            href="/settings">Settings</a>
+                                    @endif
+                                    <a class="block px-3 py-2 rounded-lg text-sm font-bold text-gray-500 hover:bg-red-100"
+                                        href="/logout">Logout</a>
                                 </div>
                             </div>
                         @endauth

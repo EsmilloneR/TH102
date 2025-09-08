@@ -34,12 +34,20 @@ class Rental extends Model
                 + ($rental->penalties ?? 0)
                 - ($rental->deposit ?? 0);
         });
+
+            static::creating(function ($rental) {
+        if (!$rental->agreement_no) {
+            $date = now()->format('Ymd');
+            $count = static::whereDate('created_at', now())->count() + 1;
+            $rental->agreement_no = 'AGR-' . $date . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
+        }
+    });
     }
 
 
     protected $casts = [
-        'start_at'=>'datetime',
-        'end_at'=>'datetime'
+        'rental_start'=>'datetime',
+        'rental_end'=>'datetime'
     ];
     public function user(){
         return $this->belongsTo(User::class);
@@ -53,4 +61,7 @@ class Rental extends Model
     public function payments(){
          return $this->hasMany(Payment::class);
     }
+
+
+
 }

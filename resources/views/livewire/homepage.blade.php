@@ -1,17 +1,16 @@
 <div>
     {{--  Hero Section  --}}
-    <section class="relative h-screen bg-cover bg-center"
+    <section class="relative h-[45rem] bg-cover bg-center"
         style="background-image: url('{{ asset('storage/images/bg.jpg') }}')">
         <!-- Red transparent overlay -->
 
         <!-- Content -->
-        <div class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6">
+        <div class="relative z-10 flex flex-col items-center justify-end h-full text-center text-white px-6 pb-10">
+            <div>
+                <h2 class="text-3xl font-bold">RENT <span class="text-red-600">Cars</span></h2>
+            </div>
+            <div class="bg-white text-black rounded-2xl shadow-lg p-6 flex flex-col  items-center gap-6">
 
-            <!-- RENT FORM -->
-            {{-- <div class="bg-white text-black rounded-2xl shadow-lg p-6 flex flex-col  items-center gap-6">
-                <div>
-                    <h2 class="text-3xl font-bold">RENT <span class="text-red-600">Cars</span></h2>
-                </div>
                 <form class="flex flex-col md:flex-row gap-4 items-center">
                     <!-- Rent Start -->
                     <div>
@@ -32,7 +31,7 @@
                         </svg>
                     </button>
                 </form>
-            </div> --}}
+            </div>
         </div>
     </section>
 
@@ -82,7 +81,7 @@
     <section id="booking" class="py-20">
         <div class="max-w-4xl mx-auto px-6 text-center">
             <h3 class="text-3xl font-bold mb-6">Book Your Car</h3>
-            {{-- @livewire('booking-form') --}}
+            @livewire('browse-cars')
         </div>
     </section>
     {{-- Booking End --}}

@@ -33,14 +33,17 @@
                             <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">
                                 <span class="text-red-600 dark:text-red-600">{{ $vehicle->make }}</span>
                                 {{ $vehicle->model }}
-                                {{ $vehicle->year }}
+                                <span class="text-sm text-gray-500">({{ $vehicle->year }})</span>
                             </h2>
                             <p class="text-md font-bold text-gray-800 dark:text-gray-200 mb-3">Seats:
                                 {{ $vehicle->seats }}</p>
-                            <p class="text-2xl font-semibold  mb-4">
+                            <p class="text-2xl font-semibold text-gray-800 mb-4">
+                                From:
+                                <span
+                                    class="text-green-600 dark:text-green-400">{{ Number::currency($vehicle->rate_hour, 'PHP') }}</span>
+                                -
                                 <span
                                     class="text-green-600 dark:text-green-400">{{ Number::currency($vehicle->rate_day, 'PHP') }}</span>
-                                / day
                             </p>
                             <div
                                 class="max-w-md max-h-100 overflow-y-auto pr-2 text-gray-700 dark:text-gray-400
@@ -49,13 +52,13 @@
                             </div>
                         </div>
 
-                        <!-- Action Button -->
                         <div class="flex flex-wrap items-center gap-4">
-                            <button
-                                class="w-full p-4 bg-red-600 rounded-md lg:w-2/5 text-white hover:bg-red-700 transition">
+                            <a href="/pickup/{{ $vehicle->id }}"
+                                class="w-full p-4 bg-red-600 rounded-md lg:w-2/5 text-center text-white hover:bg-red-700 transition">
                                 Rent Now
-                            </button>
+                            </a>
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -13,10 +13,15 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,7 +32,9 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    protected static ?string $navigationGroup = 'Customer Management';
+    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $recordTitleAttribute = 'name';
+    protected static int $globalSearchResultsLimit = 10;
 
     protected static ?int $navigationSort = 2;
 
@@ -54,7 +61,7 @@ class UserResource extends Resource
             Select::make('role')
                 ->label('User Role')
                 ->options([
-                    'rental' => 'Rental',
+                    'renter' => 'Renter',
                     'admin' => 'Admin',
                 ])
                 ->required(),
@@ -71,12 +78,12 @@ class UserResource extends Resource
                     'driver_license' => 'Driver License',
                     'national_id' => 'National ID',
                     'others' => 'Others'
-                ]),
+                ])->label('ID Type')->required(),
 
             TextInput::make('id_number')
-                ->maxLength(50),
+                ->maxLength(128)->label('ID Number')->required(),
 
-            FileUpload::make('id_pictures')->directory('customers')->multiple()->reorderable()->maxFiles(2)->appendFiles(),
+            FileUpload::make('id_pictures')->directory('customers')->multiple()->reorderable()->maxFiles(2)->appendFiles()->label('ID Pictures - Front / Back')->required(),
             ])
         ]);
     }
@@ -85,34 +92,23 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                ->formatStateUsing(fn ($state) => ucfirst($state))->searchable()->sortable(),
-                TextColumn::make('email')
-                    ->searchable(),
-                TextColumn::make('role')
-                ->formatStateUsing(fn ($state) => ucfirst($state)),
-                TextColumn::make('phone_number')
-                    ->searchable(),
-                TextColumn::make('address')
-                    ->searchable(),
-                TextColumn::make('nationality')
-                    ->searchable(),
-                TextColumn::make('id_type')
-                    ->formatStateUsing(fn ($state) => ucwords(str_replace('_', ' ', $state)))->searchable()->sortable(),
-                TextColumn::make('id_number')
-                    ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Split::make([
+                    // ImageColumn::make('avatar')
+                    //     ->circular(),
+                    Stack::make([
+                        TextColumn::make('name')
+                        ->weight(FontWeight::Bold)
+                        ->searchable()
+                        ->sortable(),
+                        TextColumn::make('role')->searchable()->sortable()->formatStateUsing(fn ($state) => ucwords(str_replace('_', ' ', $state))),
+                    ]),
+                    Stack::make([
+                        TextColumn::make('phone_number')
+                            ->icon('heroicon-m-phone'),
+                        TextColumn::make('email')
+                            ->icon('heroicon-m-envelope'),
+                    ]),
+                ])
             ])
             ->filters([
                 //
@@ -120,7 +116,8 @@ class UserResource extends Resource
             ->actions([
                 ActionGroup::make([
                     ViewAction::make(),
-                    EditAction::make()
+                    EditAction::make(),
+                    DeleteAction::make()
                 ])
             ])
             ->bulkActions([
@@ -136,7 +133,10 @@ class UserResource extends Resource
             //
         ];
     }
-
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email', 'role'];
+    }
     public static function getPages(): array
     {
         return [

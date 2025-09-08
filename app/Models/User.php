@@ -74,7 +74,7 @@ class User extends Authenticatable
 
     public function isCarRental(): bool
     {
-        return $this->role === 'rental';
+        return $this->role === 'renter';
     }
 
     protected $casts = [

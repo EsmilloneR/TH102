@@ -2,23 +2,29 @@
 
 namespace App\Livewire;
 
-use App\Models\Rental;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
-
+use App\Models\Vehicle; // make sure you have this model
+#[Layout('components.layouts.app')]
+#[Title('Pickup Detail')]
 class PickupDetail extends Component
 {
-
     public $id;
+    public $vehicle;
 
     public function mount($id)
     {
         $this->id = $id;
-    }
 
+        // load vehicle data
+        $this->vehicle = Vehicle::findOrFail($id);
+    }
 
     public function render()
     {
-
-        return view('livewire.pickup-detail', ['rental' => Rental::where('id', $this->id)->firstOrFail()]);
+        return view('livewire.pickup-detail', [
+            'vehicle' => $this->vehicle
+        ]);
     }
 }

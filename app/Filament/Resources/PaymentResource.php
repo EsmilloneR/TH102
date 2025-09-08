@@ -36,12 +36,12 @@ class PaymentResource extends Resource
                 Select::make('payment_method')
                     ->options([
                         'cash' => 'Cash',
-                        'gcash' => 'GCash',
-                        'paymaya' => 'PayMaya',
-                        'card' => 'Card',
+                        // 'gcash' => 'GCash',
+                        // 'paymaya' => 'PayMaya',
+                        // 'card' => 'Card',
                     ])
                     ->required()
-                    ->label('Payment Method'),
+                    ->label('Payment Method')->default('cash'),
 
                     TextInput::make('amount')->numeric()->required()->label('Amount')->prefix('₱')->minValue(0),
 

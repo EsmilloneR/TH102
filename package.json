@@ -6,7 +6,11 @@
         "dev": "vite"
     },
     "dependencies": {
+        "@floating-ui/dom": "^1.7.4",
+        "@preline/dropdown": "^3.2.3",
         "@tailwindcss/vite": "^4.1.11",
+        "@tailwindplus/elements": "^1.0.12",
+        "alpinejs": "^3.15.0",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.0",

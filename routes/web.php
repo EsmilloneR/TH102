@@ -1,36 +1,29 @@
 <?php
 
 use App\Http\Controllers\InvoiceController;
-use App\Livewire\Auth\LoginPage;
-use App\Livewire\Auth\RegisterPage;
+use App\Livewire\Auth\Login;
+use App\Livewire\Auth\Register;
 use App\Livewire\BrowseCars;
+use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Homepage;
 use App\Livewire\PickupDetail;
+use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\VehicleDetail;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', Homepage::class);
-Route::get('/browse-cars', BrowseCars::class);
-Route::get('/vehicle/{id}', VehicleDetail::class);
-Route::get('/payments/{id}/receipt', [InvoiceController::class, 'receipt'])
-    ->name('payments.receipt');
-
+Route::get('/', Homepage::class)->name('/');
+Route::get('/vehicle/{id}', VehicleDetail::class)->name('vehicle-detail');
+Route::get('/browse-cars/', BrowseCars::class)->name('browse-cars');
 
 Route::middleware('guest')->group(function(){
-    Route::get('/login-page', LoginPage::class);
-    Route::get('/register-page', RegisterPage::class);
-});
+    Route::get('/login', Login::class)->name('login');
 
-Route::middleware('auth')->group(function(){
-    Route::get('/pickup/{id}', PickupDetail::class);
-
-    Route::get('/logout', function(){
-        auth()->logout();
-        return redirect('/');
-    });
+    Route::get('/register', Register::class)->name('register');
+    Route::get('/reset/{token}', ResetPassword::class)->name('password.reset');
+    Route::get('/forgot', ForgotPassword::class)->name('password.request');
 
 });
 
@@ -39,6 +32,14 @@ Route::middleware('auth')->group(function(){
 //     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/pickup/{id}', PickupDetail::class)->name('pickup-detail');
+    Route::get('/payments/{id}/receipt', [InvoiceController::class, 'receipt'])
+    ->name('payments.receipt');
+    Route::get('/logout', function(){
+        auth()->logout();
+        return redirect('/');
+    });
     Route::redirect('settings', 'settings/profile');
 
     Route::get('settings/profile', Profile::class)->name('settings.profile');

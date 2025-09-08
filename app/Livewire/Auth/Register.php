@@ -3,41 +3,49 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Livewire\Attributes\Layout;
+use Hash;
+use Illuminate\Validation\Rules\Password;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Layout('components.layouts.auth')]
+#[Title('Register')]
+
 class Register extends Component
 {
-    public string $name = '';
 
-    public string $email = '';
+    public $name;
+    public $email;
+    public $password;
+    public $password_confirmation;
 
-    public string $password = '';
 
-    public string $password_confirmation = '';
-
-    /**
-     * Handle an incoming registration request.
-     */
-    public function register(): void
-    {
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+    // Register user
+    public function save(){
+        // dd($this->name, $this->email, $this->password);
+        $this->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users|max:255',
+            'password' => ['required','min:6','max:255','confirmed', Password::defaults()],
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        // Save to database
+        $user = User::create([
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => Hash::make($this->password)
+        ]);
 
-        event(new Registered(($user = User::create($validated))));
+        // login user
+        auth()->login($user);
+        $this->reset(['name', 'email', 'password', 'password_confirmation']);
+        return redirect()->intended();
+        // dd($user);
 
-        Auth::login($user);
+    }
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+
+    public function render()
+    {
+        return view('livewire.auth.register-page');
     }
 }

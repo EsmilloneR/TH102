@@ -3,8 +3,13 @@
 namespace App\Livewire;
 
 use App\Models\Vehicle;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+
+#[Layout('components.layouts.app')]
+#[Title('Vehicle Detail')]
 class VehicleDetail extends Component
 {
     public $id;

@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -22,6 +23,8 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
@@ -87,15 +90,40 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('photo')->circular()->width(40)->height(40),
-                TextColumn::make('make')->sortable()->searchable(),
-                TextColumn::make('model')->sortable()->searchable(),
-                TextColumn::make('year')->sortable(),
-                TextColumn::make('licensed_number')->sortable()->searchable()->label('Plate No.'),
-                TextColumn::make('color'),
-                TextColumn::make('transmission'),
-                TextColumn::make('seats'),
-                IconColumn::make('active')->boolean(),
+                // ImageColumn::make('photo')->circular()->width(40)->height(40),
+                // TextColumn::make('make')->sortable()->searchable(),
+                // TextColumn::make('model')->sortable()->searchable(),
+                // TextColumn::make('year')->sortable(),
+                // TextColumn::make('licensed_number')->sortable()->searchable()->label('Plate No.'),
+                // TextColumn::make('color'),
+                // TextColumn::make('transmission')->formatStateUsing(fn ($state) => ucwords(str_replace('_', ' ', $state))),
+                // TextColumn::make('seats'),
+                // IconColumn::make('active')->boolean(),
+
+
+
+                    Split::make([
+                    // ImageColumn::make('avatar')
+                    //     ->circular(),
+                    ImageColumn::make('photo')->circular()->grow(false),
+                    Stack::make([
+                    TextColumn::make('model')
+                        ->weight(FontWeight::Bold)
+                        ->searchable()
+                        ->sortable(),
+                    TextColumn::make('make')
+                        ->weight(FontWeight::SemiBold)
+                        ->searchable()
+                    ]),
+                    Stack::make([
+                        TextColumn::make('transmission')->formatStateUsing(fn ($state) => ucwords(str_replace('_', ' ', $state)))
+                            ->icon('heroicon-m-check-circle'),
+                        TextColumn::make('licensed_number')->label('Plate No.')
+                            ->icon('heroicon-m-pencil-square'),
+                    ]),
+                        IconColumn::make('active')->boolean()
+                        ->icon('heroicon-m-check-circle'),
+                ])
             ])
             ->filters([
                 TernaryFilter::make('active'),
