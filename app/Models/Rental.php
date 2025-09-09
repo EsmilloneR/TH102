@@ -35,33 +35,44 @@ class Rental extends Model
                 - ($rental->deposit ?? 0);
         });
 
-            static::creating(function ($rental) {
-        if (!$rental->agreement_no) {
-            $date = now()->format('Ymd');
-            $count = static::whereDate('created_at', now())->count() + 1;
-            $rental->agreement_no = 'AGR-' . $date . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
-        }
-    });
-    }
+        static::creating(function ($rental) {
+            if (!$rental->agreement_no) {
+                $date = now()->format('Ymd');
+                $count = static::whereDate('created_at', now())->count() + 1;
 
+                do {
+                    $agreementNo = 'AGR-' . $date . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
+                    $exists = static::where('agreement_no', $agreementNo)->exists();
+                    $count++;
+                } while ($exists);
+
+                $rental->agreement_no = $agreementNo;
+            }
+        });
+    }
 
     protected $casts = [
-        'rental_start'=>'datetime',
-        'rental_end'=>'datetime'
+        'rental_start' => 'datetime',
+        'rental_end'   => 'datetime',
     ];
-    public function user(){
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function vehicle(){
-         return $this->belongsTo(Vehicle::class);
-    }
-    public function inspections(){
-         return $this->hasMany(Inspection::class);
-    }
-    public function payments(){
-         return $this->hasMany(Payment::class);
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
     }
 
+    public function inspections()
+    {
+        return $this->hasMany(Inspection::class);
+    }
 
-
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

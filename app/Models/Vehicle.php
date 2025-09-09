@@ -31,15 +31,23 @@ class Vehicle extends Model
         return $this->hasMany(Rental::class);
     }
 
-    public function scopeAvailable($query, $start, $end){
-        return $query->whereDoesntHave('rentals', function($qq) use($start, $end){
-            $qq->whereIn('status', ['reserved', 'ongoing'])->where(function($w) use($start, $end){
-                $w->whereBetween('rental_start', [$start, $end])->orBetween('rental_end', [$start, $end])->orBetween(function($z) use($start, $end){
-                    $z->where('start_at', '<=', $start)->where('end_at', '>=', $end);
-                });
+    public function scopeAvailable($query, $start, $end)
+    {
+        return $query->whereDoesntHave('rentals', function($qq) use($start, $end) {
+            $qq->whereIn('status', ['reserved', 'ongoing'])
+            ->where(function($w) use($start, $end) {
+                // Vehicles reserved or ongoing within the start and end range
+                $w->whereBetween('rental_start', [$start, $end])
+                    ->orWhereBetween('rental_end', [$start, $end])
+                    ->orWhere(function($z) use($start, $end) {
+                        // Vehicles that overlap the requested range
+                        $z->where('rental_start', '<=', $start)
+                        ->where('rental_end', '>=', $end);
+                    });
             });
         });
     }
+
 
     protected $casts = [
     'images' => 'array'

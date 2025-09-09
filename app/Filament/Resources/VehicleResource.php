@@ -13,6 +13,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
@@ -26,6 +27,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,9 +36,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class VehicleResource extends Resource
 {
     protected static ?string $model = Vehicle::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-truck';
     protected static ?string $navigationGroup = 'Fleet Management';
+    protected static ?string $navigationLabel = "Vehicles";
+    protected static ?string $recordTitleAttribute = 'model';
+
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -86,25 +90,19 @@ class VehicleResource extends Resource
             ]);
     }
 
+    use InteractsWithTable;
+    use InteractsWithForms;
+
     public static function table(Table $table): Table
     {
         return $table
+        ->query(Vehicle::query())
             ->columns([
-                // ImageColumn::make('photo')->circular()->width(40)->height(40),
-                // TextColumn::make('make')->sortable()->searchable(),
-                // TextColumn::make('model')->sortable()->searchable(),
-                // TextColumn::make('year')->sortable(),
-                // TextColumn::make('licensed_number')->sortable()->searchable()->label('Plate No.'),
-                // TextColumn::make('color'),
-                // TextColumn::make('transmission')->formatStateUsing(fn ($state) => ucwords(str_replace('_', ' ', $state))),
-                // TextColumn::make('seats'),
-                // IconColumn::make('active')->boolean(),
 
 
 
                     Split::make([
-                    // ImageColumn::make('avatar')
-                    //     ->circular(),
+
                     ImageColumn::make('photo')->circular()->grow(false),
                     Stack::make([
                     TextColumn::make('model')
@@ -117,12 +115,22 @@ class VehicleResource extends Resource
                     ]),
                     Stack::make([
                         TextColumn::make('transmission')->formatStateUsing(fn ($state) => ucwords(str_replace('_', ' ', $state)))
-                            ->icon('heroicon-m-check-circle'),
+                            ->icon('heroicon-m-check-circle')
+                            ->sortable()
+                            ->searchable(),
                         TextColumn::make('licensed_number')->label('Plate No.')
                             ->icon('heroicon-m-pencil-square'),
                     ]),
-                        IconColumn::make('active')->boolean()
-                        ->icon('heroicon-m-check-circle'),
+                    Stack::make([
+                    TextColumn::make('seats')
+                    ->formatStateUsing(fn ($state) => $state . ' Seats')
+                    ->sortable()
+                    ->searchable(),
+                    TextColumn::make('color')->formatStateUsing(fn($state) => ucwords(str_replace('_', ' ', $state)))
+                    ]),
+
+                    IconColumn::make('active')->boolean()
+                    ->icon('heroicon-m-check-circle'),
                 ])
             ])
             ->filters([
@@ -155,5 +163,29 @@ class VehicleResource extends Resource
             'create' => Pages\CreateVehicle::route('/create'),
             'edit' => Pages\EditVehicle::route('/{record}/edit'),
         ];
+    }
+
+    // public function render()
+    // {
+
+    //     $browseCars = Vehicle::where('active', true)->paginate(6);
+    //     // dd($browseCars);
+    //     // return view('livewire.booking-rent', ['browseCars' => $browseCars]);
+    // }
+
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['make', 'model', 'transmission', 'licensed_number'];
+    }
+
+        public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('active', true)->count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::getModel()::count() > 5 ? 'success' : 'danger';
     }
 }

@@ -18,7 +18,7 @@ class AdminMiddleware
     {
         // dd(Auth::user()->isAdmin());
         if (!Auth::user()?->isAdmin()) {
-                return redirect('/login');
+                return redirect()->route('/');
             }
 
             return $next($request);

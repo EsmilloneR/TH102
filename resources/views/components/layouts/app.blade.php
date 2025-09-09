@@ -16,9 +16,11 @@
 
     {{ $slot }}
 
-    @if (!request()->routeIs('pickup-detail'))
+    @if (!request()->routeIs('pickup-detail') || !request()->routeIs('confirmation') || !request()->routeIs('thankyou'))
         @livewire('partial.footer')
     @endif
+
+
     @livewireScripts
 </body>
 

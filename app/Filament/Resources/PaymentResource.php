@@ -36,21 +36,34 @@ class PaymentResource extends Resource
                 Select::make('payment_method')
                     ->options([
                         'cash' => 'Cash',
-                        // 'gcash' => 'GCash',
-                        // 'paymaya' => 'PayMaya',
-                        // 'card' => 'Card',
+                        'online' => 'online',
                     ])
                     ->required()
-                    ->label('Payment Method')->default('cash'),
+                    ->label('Payment Method')
+                    ->default('cash'),
 
-                    TextInput::make('amount')->numeric()->required()->label('Amount')->prefix('₱')->minValue(0),
+                TextInput::make('amount')
+                    ->numeric()
+                    ->required()
+                    ->label('Amount')
+                    ->prefix('₱')
+                    ->minValue(0),
 
-                    TextInput::make('transaction_reference')->label('Reference Number')->maxLength(255),
-                    Select::make('status')->options([
-                        'pending' => 'Pending',
-                        'completed' => 'Completed',
-                        'failed' => 'Failed',
-                    ])->default('pending')->required()->label('Status'),
+                TextInput::make('transaction_reference')
+                    ->label('Reference Number')
+                    ->visible(fn ($get) => $get('payment_method') !== 'cash')
+                    ->maxLength(255),
+
+                Select::make('status')
+                    ->options([
+                        Payment::STATUS_PENDING   => 'Pending',
+                        Payment::STATUS_COMPLETED => 'Completed',
+                        Payment::STATUS_FAILED    => 'Failed',
+                    ])
+                    ->default(Payment::STATUS_PENDING)
+                    ->required()
+                    ->label('Status'),
+
             ]);
     }
 
@@ -68,7 +81,7 @@ class PaymentResource extends Resource
                 ->sortable()
                 ->searchable(),
 
-            TextColumn::make('payment_method')->badge()->sortable(),
+            TextColumn::make('payment_method')->badge()->sortable()->formatStateUsing(fn ($state) => ucwords($state))->label('Payment Method'),
 
             TextColumn::make('amount')
                 ->money('PHP', true)
@@ -82,12 +95,15 @@ class PaymentResource extends Resource
 
             BadgeColumn::make('status')
                 ->colors([
-                    'warning' => 'pending',
-                    'success' => 'completed',
-                    'danger' => 'failed',
+                    'warning' => Payment::STATUS_PENDING,
+                    'success' => Payment::STATUS_COMPLETED,
+                    'danger'  => Payment::STATUS_FAILED,
                 ])
+                ->formatStateUsing(fn ($state) => ucfirst($state))
+                ->label('Status')
                 ->sortable()
                 ->searchable(),
+
 
             TextColumn::make('created_at')
                 ->dateTime('M d, Y h:i A')
@@ -140,6 +156,6 @@ class PaymentResource extends Resource
 
     public static function getNavigationBadgeColor(): string|array|null
     {
-        return static::getModel()::count() > 10 ? 'success' : 'danger';
+        return static::getModel()::count() > 10 ? 'danger' : 'success';
     }
 }

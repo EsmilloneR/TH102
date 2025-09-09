@@ -29,7 +29,10 @@ class RentalResource extends Resource
 {
     protected static ?string $model = Rental::class;
 
-     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
+    protected static ?string $navigationLabel = "Rental/s";
+
+
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
     protected static ?string $navigationGroup = 'Rental Management';
     protected static ?int $navigationSort = 3;
 
@@ -52,7 +55,7 @@ class RentalResource extends Resource
 
                             if ($start && $end) {
                                 $query->whereDoesntHave('rentals', function ($q) use ($start, $end) {
-                                    $q->whereIn('status', ['reserved', 'ongoing']) // only block active rentals
+                                    $q->whereIn('status', ['reserved', 'ongoing'])
                                     ->where(function ($q2) use ($start, $end) {
                                         $q2->whereBetween('rental_start', [$start, $end])
                                             ->orWhereBetween('rental_end', [$start, $end])
@@ -74,8 +77,8 @@ class RentalResource extends Resource
                     DateTimePicker::make('rental_start')->label('Start Date/Time')->required(),
                     DateTimePicker::make('rental_end')->label('End Date/Time')->required(),
 
-                    TextInput::make('pickup_location')->maxLength(150)->required(),
-                    TextInput::make('dropoff_location')->maxLength(150)->required(),
+                    TextInput::make('pickup_location')->maxLength(150),
+                    TextInput::make('dropoff_location')->maxLength(150),
 
                     Select::make('trip_type')->options(['pickup_dropoff' => 'Pick Up & Drop Off Only', 'hrs' => 'Hour/s', 'roundtrip' => 'Round Trip Only (10hrs max)', '24hrs' => '24 Hours', 'days' => 'Days', 'week' => 'Week/weeks', 'month' => 'Month/months'])->required(),
                     TextInput::make('agreement_no')
@@ -93,7 +96,7 @@ class RentalResource extends Resource
                     TextInput::make('fuel_level_in')->numeric()->suffix('%')
                 ])->columns(2),
 
-                Section::make('Financials')->schema([
+                Section::make('Financial')->schema([
                     TextInput::make('base_amount')->numeric()->prefix('₱')->default(0),
                     TextInput::make('deposit')->numeric()->prefix('₱')->default(0),
                     TextInput::make('extra_charges')->numeric()->prefix('₱')->default(0),
@@ -118,25 +121,25 @@ class RentalResource extends Resource
                     Stack::make([
                         TextColumn::make('user.name')->label('Renter')->searchable()->sortable(),
                         TextColumn::make('agreement_no')->weight('bold')->searchable()->sortable(),
-                    ]),
+                    ])->space(1),
                     Stack::make([
                         TextColumn::make('vehicle.make')
                             ->label('Vehicle')
                             ->getStateUsing(fn ($record) => "{$record->vehicle->make} {$record->vehicle->model}")
                             ->searchable()
                             ->sortable(),
-                        TextColumn::make('vehicle.licensed_number')->label('Licensed Number')->searchable()->sortable(),
+                        TextColumn::make('vehicle.licensed_number')->label('Licensed Number')->searchable()->sortable()->weight('bold'),
                     ]),
                     Stack::make([
                         TextColumn::make('status')
                             ->formatStateUsing(fn ($state) => ucwords(str_replace('_', ' ', $state)))
                             ->searchable()
                             ->sortable(),
-                        TextColumn::make('total')->money('php'),
+                        TextColumn::make('total')->money('php')->weight('bold'),
                     ]),
                     Stack::make([
-                        TextColumn::make('rental_start')->dateTime()->label('Start')->sortable(),
-                        TextColumn::make('rental_end')->dateTime()->label('End')->sortable(),
+                        TextColumn::make('rental_start')->dateTime()->label('Rent Start')->sortable(),
+                        TextColumn::make('rental_end')->dateTime()->label('Rent End')->sortable()->weight('bold'),
                     ]),
                 ]),
             ])
@@ -162,7 +165,7 @@ class RentalResource extends Resource
 
     public static function getNavigationBadgeColor(): string|array|null
     {
-        return static::getModel()::count() > 10 ? 'success' : 'danger';
+        return static::getModel()::count() > 10 ? 'danger' : 'success';
     }
 
     public static function getRelations(): array

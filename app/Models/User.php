@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
 class User extends Authenticatable
 {
@@ -24,6 +26,7 @@ class User extends Authenticatable
         'password',
         'address',
         'nationality',
+        'avatar',
         'id_type',
         'id_number',
         'id_pictures',
@@ -72,9 +75,14 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isCarRental(): bool
+
+       public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role === 'renter';
+        if ($panel->getId() === 'admin') {
+            return str_ends_with($this->email, '@gmail.com') && $this->hasVerifiedEmail();
+        }
+
+        return true;
     }
 
     protected $casts = [
@@ -84,4 +92,5 @@ class User extends Authenticatable
     public function rentals(){
         return $this->hasMany(Rental::class);
     }
+
 }

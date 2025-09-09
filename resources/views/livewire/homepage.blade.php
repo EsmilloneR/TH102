@@ -1,6 +1,6 @@
 <div>
     {{--  Hero Section  --}}
-    <section class="relative h-[45rem] bg-cover bg-center"
+    <section class="relative h-[43rem] bg-cover bg-center"
         style="background-image: url('{{ asset('storage/images/bg.jpg') }}')">
         <!-- Red transparent overlay -->
 
@@ -11,20 +11,20 @@
             </div>
             <div class="bg-white text-black rounded-2xl shadow-lg p-6 flex flex-col  items-center gap-6">
 
-                <form class="flex flex-col md:flex-row gap-4 items-center">
+                <form wire:submit.prevent="search" method="POST" class="flex flex-col md:flex-row gap-4 items-center">
                     <!-- Rent Start -->
                     <div>
                         <label class="block text-sm font-semibold">Rent Start</label>
-                        <input type="date" class="border rounded-lg px-3 py-2">
+                        <input type="date" class="border rounded-lg px-3 py-2" wire:model="rental_start">
                     </div>
                     <!-- Rent End -->
                     <div>
                         <label class="block text-sm font-semibold">Rent End</label>
-                        <input type="date" class="border rounded-lg px-3 py-2">
+                        <input type="date" class="border rounded-lg px-3 py-2" wire:model="rental_end">
                     </div>
                     <!-- Search Button -->
                     <button type="submit" class="bg-black text-white p-3 rounded-full hover:bg-red-600 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -78,11 +78,11 @@
 
 
     {{-- Booking Start --}}
-    <section id="booking" class="py-20">
+    {{-- <section id="booking" class="py-20">
         <div class="max-w-4xl mx-auto px-6 text-center">
             <h3 class="text-3xl font-bold mb-6">Book Your Car</h3>
             @livewire('browse-cars')
         </div>
-    </section>
+    </section> --}}
     {{-- Booking End --}}
 </div>

@@ -9,15 +9,24 @@ class Payment extends Model
 {
     use HasFactory;
 
+    const STATUS_PENDING   = 'pending';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_FAILED    = 'failed';
+
     protected $fillable = [
         'rental_id',
         'payment_method',
         'amount',
         'transaction_reference',
-        'status'
+        'status',
     ];
 
-    public function rental(){
+    protected $casts = [
+        'amount' => 'decimal:2',
+    ];
+
+    public function rental()
+    {
         return $this->belongsTo(Rental::class);
     }
 }

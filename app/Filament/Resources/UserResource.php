@@ -13,6 +13,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
@@ -34,6 +35,11 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $navigationLabel = "User/s";
+
+    protected static ?string $modelLabel = 'Accounts';
+
+
     protected static int $globalSearchResultsLimit = 10;
 
     protected static ?int $navigationSort = 2;
@@ -42,11 +48,12 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-        Section::make('Rental Identification')->schema([
+        Section::make('Renter Identification')->schema([
+            FileUpload::make('avatar')->directory('customers')->image()->maxSize(2048)->label('Profile Photo'),
                 TextInput::make('name')
                 ->required()
                 ->maxLength(100),
-
+// ->fallback('path/to/default-image.jpg'), // Default image if photo is null
 
             TextInput::make('email')
                 ->email()
@@ -93,8 +100,7 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Split::make([
-                    // ImageColumn::make('avatar')
-                    //     ->circular(),
+                ImageColumn::make('avatar')->circular()->defaultImageUrl(asset('storage/default.jpg'))->size(40)->grow(false),
                     Stack::make([
                         TextColumn::make('name')
                         ->weight(FontWeight::Bold)
@@ -104,10 +110,12 @@ class UserResource extends Resource
                     ]),
                     Stack::make([
                         TextColumn::make('phone_number')
-                            ->icon('heroicon-m-phone'),
+                            ->icon('heroicon-m-phone')->grow(false),
                         TextColumn::make('email')
-                            ->icon('heroicon-m-envelope'),
-                    ]),
+                            ->icon('heroicon-m-envelope')->grow(false),
+                    ])
+                    // ->alignment(Alignment::End)
+                    // ->visibleFrom('md'),
                 ])
             ])
             ->filters([
