@@ -9,16 +9,15 @@ use Livewire\Attributes\Validate;
 class Login extends Component
 {
     // Declare properties for the form fields
+    #[Validate('required|email|exists:users,email')]
     public string $email = '';
+
+    #[Validate('required|min:6')]
     public string $password = '';
 
-
-    #[Validate([
-        'email' => 'required|email|exists:users,email',
-        'password' => 'required|min:6',
-    ])]
     public function save()
     {
+        $this->validate();
         // Attempt to authenticate the user
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
             if (Auth::user()->role == 'admin') {
@@ -30,6 +29,8 @@ class Login extends Component
         } else {
             session()->flash('error', 'Invalid credentials!');
         }
+        $this->addError('email', 'Invalid credentials, please try again.');
+        $this->addError('password', 'Invalid credentials, please try again.');
     }
 
     public function render()

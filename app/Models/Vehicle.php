@@ -30,6 +30,10 @@ class Vehicle extends Model
     public function rentals(){
         return $this->hasMany(Rental::class);
     }
+    public function gpsLog()
+{
+    return $this->hasMany(GpsLog::class);
+}
 
     public function scopeAvailable($query, $start, $end)
     {

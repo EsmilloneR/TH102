@@ -15,7 +15,7 @@
 
         <p class="text-gray-700 dark:text-gray-300 text-lg mb-6">
             Your booking has been <span class="font-semibold">successfully confirmed.</span><br>
-            Check your <span class="text-red-600">Email</span> or <span class="text-red-600">Homepage</span> for
+            Check your <span class="text-red-600">Email</span> for
             details.
         </p>
 

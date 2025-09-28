@@ -181,12 +181,13 @@
         <div class="section">
             <table class="table">
                 <tr>
-                    <td class="label">Destination:</td>
-                    <td colspan="3">{{ $rental->destination ?? '________________' }}</td>
+                    <td class="label">Pickup Location:</td>
+                    <td colspan="3">{{ $rental->pickup_location ?? '________________' }}</td>
                 </tr>
                 <tr>
                     <td class="label">Return Date:</td>
-                    <td>{{ $rental->return_date ?? '_________' }}</td>
+                    <td>{{ $rental->rental_end ? \Carbon\Carbon::parse($rental->rental_end)->format('M d, Y') : '_________' }}
+                    </td>
                     <td class="label">Fuel Level:</td>
                     <td>{{ $rental->fuel_level ?? '_________' }}</td>
                 </tr>

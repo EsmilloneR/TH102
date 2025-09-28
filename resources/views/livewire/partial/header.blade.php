@@ -1,5 +1,5 @@
 <header
-    class="flex z-50 sticky top-0 flex-wrap md:justify-start md:flex-nowrap w-full bg-white text-sm py-3 md:py-0 dark:bg-gray-800 shadow-md ">
+    class="flex z-50 sticky top-0 flex-wrap md:justify-start md:flex-nowrap w-full bg-white text-sm py-3 md:py-0 dark:bg-gray-800 shadow-md opacity-90">
     <nav class="max-w-[85rem] w-full mx-auto px-4 md:px-6 lg:px-8" aria-label="Global">
         <div class="relative md:flex md:items-center md:justify-between">
             <div class="flex items-center justify-between">
@@ -45,18 +45,6 @@
                         </a>
 
                         @guest
-                            {{-- <div class="pt-3 md:pt-0">
-                                <a class="py-2.5 px-4 inline-flex items-center gap-x-2 text-sm font-bold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                    href="/login" wire:navigate>
-                                    <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24"
-                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                                        <circle cx="12" cy="7" r="4" />
-                                    </svg>
-                                    Log in
-                                </a>
-                            </div> --}}
 
                             @if (!request()->routeIs('login'))
                                 <div>
@@ -117,11 +105,17 @@
                             @endif
                         @endguest
 
+
                         @auth
-                            <div x-data="{ open: false }" @keydown.escape.window="open = false" class="relative">
+                            <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false"
+                                @keydown.escape.window="open = false" class="relative">
+                                {{-- {{ dd('/storage/' . Auth::user()->avatar) }} --}}
                                 <button @click="open = !open"
-                                    class="flex items-center w-full text-gray-500 hover:text-gray-400 font-bold dark:text-gray-400 dark:hover:text-gray-500">
-                                    {{ Auth::user()->name }}
+                                    class="flex items-center w-full text-gray-500 hover:text-gray-400 font-bold dark:text-gray-400 dark:hover:text-gray-500 shadow-2xl border-2 rounded-full p-2">
+                                    <img src="{{ asset('/storage/' . Auth::user()->avatar) }}"
+                                        alt="{{ Auth::user()->name }}'s avatar" class="w-8 h-8 rounded-full object-cover">
+
+
                                     <svg :class="open ? 'rotate-180' : ''" class="w-4 h-4 transition-transform"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <path d="m6 9 6 6 6-6" />
@@ -135,12 +129,12 @@
                                             href="/admin" wire:navigate>Admin Panel</a>
                                     @else
                                         <a class="block px-3 py-2 rounded-lg text-sm font-bold text-gray-500 hover:bg-red-100"
-                                            href="/checkout">Checkout</a>
+                                            href="/my-car" wire:navigate>My Rentals</a>
                                         <a class="block px-3 py-2 rounded-lg text-sm font-bold text-gray-500 hover:bg-red-100"
-                                            href="/settings">Settings</a>
+                                            href="/settings" wire:navigate>Settings</a>
                                     @endif
                                     <a class="block px-3 py-2 rounded-lg text-sm font-bold text-gray-500 hover:bg-red-100"
-                                        href="/logout">Logout</a>
+                                        href="/logout" wire:navigate>Logout</a>
                                 </div>
                             </div>
                         @endauth

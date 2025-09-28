@@ -45,12 +45,15 @@
                     </div>
 
                     <div class="flex justify-center p-4 border-t border-gray-300 dark:border-gray-700">
-                        <a href="/pickup/{{ $car->id }}"
-                            class="text-gray-600 flex items-center space-x-2 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-300"
-                            wire:navigate>
-                            <span>Rent Now</span>
-                        </a>
+                        <div>
+                            <a href="/pickup/{{ $car->id }}"
+                                class="text-gray-600 flex items-center space-x-2 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-300"
+                                wire:navigate>
+                                <span>Rent Now</span>
+                            </a>
+                        </div>
                     </div>
+
                 </div>
             </div>
         @empty

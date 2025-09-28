@@ -9,7 +9,6 @@
 
                     <div class="mt-5">
                         <form wire:submit.prevent="resetPassword" method="POST">
-                            @csrf
 
                             <div class="grid gap-y-4">
                                 <div>

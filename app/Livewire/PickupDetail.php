@@ -8,13 +8,13 @@ use Livewire\Component;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 
-#[Layout('components.layouts.app')]
+// #[Layout('components.layouts.blank')]
 #[Title('Pickup Detail')]
 class PickupDetail extends Component
 {
     public $id;
     public $vehicle;
-
+    public $trip_type;
     public $pickup_location;
     public $rental_start;
     public $rental_end;
@@ -83,6 +83,8 @@ class PickupDetail extends Component
 
     public function save()
     {
+        // Log::debug('Pickup Location: ' . $this->pickup_location);
+        // dd($this->pickup_location);
         if ($this->error || $this->days <= 0 || $this->total <= 0) {
             return; // prevent invalid submission
         }
@@ -97,6 +99,8 @@ class PickupDetail extends Component
 
         return redirect()->route('confirmation', [
             'car' => $this->vehicle->id,
+            'trip_type' => $this->trip_type,
+            'pickup_location' => $this->pickup_location,
             'rental_start' => $this->rental_start,
             'rental_end' => $this->rental_end,
             'rate_day' => Vehicle::find($this->vehicle->id)->rate_day,

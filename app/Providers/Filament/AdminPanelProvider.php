@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\GpsLogResource\Widgets\VehicleMapWidget;
+use App\Filament\Resources\RentalResource\Widgets\Rental;
+use App\Filament\Widgets\RentalChart;
 use App\Filament\Widgets\RentalStatsOverview;
 use App\Http\Middleware\AdminMiddleware;
 use App\Providers\FilamentServiceProvider;
@@ -28,8 +31,18 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->navigationItems([
+                NavigationItem::make('Home')
+                    ->url('/')
+                    ->icon('heroicon-o-home')
+                    ->sort(-10)
+                    // ->openUrlInNewTab(),
+            ])
             ->spa()
             ->default()
+            ->brandLogo(asset('favicon.ico'))
+            ->brandLogoHeight('3rem')
+            ->brandName('Twayne Garage')
             ->id('admin')
             ->path('admin')
             ->profile()
@@ -38,7 +51,7 @@ class AdminPanelProvider extends PanelProvider
             // ->emailVerification()
             ->colors([
                 'primary' => Color::Red,
-                'gray' => Color::Stone
+                'gray' => Color::Slate
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -50,6 +63,8 @@ class AdminPanelProvider extends PanelProvider
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
                 RentalStatsOverview::class,
+                RentalChart::class,
+                VehicleMapWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

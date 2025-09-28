@@ -29,7 +29,7 @@ class RentalResource extends Resource
 {
     protected static ?string $model = Rental::class;
 
-    protected static ?string $navigationLabel = "Rental/s";
+    protected static ?string $navigationLabel = "Renters";
 
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';

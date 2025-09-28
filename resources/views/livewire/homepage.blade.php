@@ -1,6 +1,6 @@
 <div>
     {{--  Hero Section  --}}
-    <section class="relative h-[43rem] bg-cover bg-center"
+    <section class="relative h-[96vh] bg-cover bg-center"
         style="background-image: url('{{ asset('storage/images/bg.jpg') }}')">
         <!-- Red transparent overlay -->
 

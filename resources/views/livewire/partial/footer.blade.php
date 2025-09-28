@@ -1,5 +1,6 @@
 <div>
-    <section *ngIf="showNewsletter" class="bg-gray-300 text-dark-2 p-4 py-6">
+
+    {{-- <section *ngIf="showNewsletter" class="bg-gray-300 text-dark-2 p-4 py-6">
         <div class="w-full flex flex-col lg:flex-row justify-center items-center gap-4">
             <div>
                 <div class="font-semibold text-xs">NEWSLETTER</div>
@@ -20,7 +21,8 @@
                 </button>
             </div>
         </div>
-    </section>
+    </section> --}}
+
     <footer>
         <div
             class="bg-[#E0E2E6] text-dark-2 pt-5 px-10 lg:pt-10 flex flex-col lg:flex-row justify-evenly items-stretch gap-8 lg:gap-0">
